@@ -81,17 +81,20 @@ function Annotation({ position, content, side = "right" }) {
     opacity: opacity
   }}
 >
-  <div
-    className={`px-6 py-3 rounded-lg max-w-md backdrop-blur-sm whitespace-nowrap ${getPositionClass()}`}
-    style={{
-      backgroundColor: 'rgba(0, 0, 0, 0.15)',
-      color: '#ffffff',
-      border: '2px solid #acacac',
-    //   boxShadow: '0 0 10px #F3823D, 0 0 20px #F3823D, 0 0 40px #F3823D',
-    }}
-  >
-    {content}
-  </div>
+<div
+  className={`px-4 py-2 rounded-lg backdrop-blur-sm whitespace-nowrap ${getPositionClass()}`}
+  style={{
+    backgroundColor: 'rgba(0, 0, 0, 0.15)',
+    color: '#ffffff',
+    border: '2px solid #acacac',
+    fontSize: '14px', // ✅ fixed font size
+    maxWidth: '200px', // ✅ constrain width
+    whiteSpace: 'nowrap',
+    // boxShadow: '0 0 10px #F3823D, 0 0 20px #F3823D, 0 0 40px #F3823D',
+  }}
+>
+  {content}
+</div>
 </Html>
 
 
