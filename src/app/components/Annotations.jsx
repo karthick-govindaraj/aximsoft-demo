@@ -73,6 +73,7 @@ function Annotation({ position, content, side = "right" }) {
   distanceFactor={10}
   className="pointer-events-none"
   style={{
+    fontSize: '14px',
     transition: 'opacity 0.5s ease-in-out',
     opacity: opacity
   }}
