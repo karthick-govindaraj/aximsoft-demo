@@ -62,15 +62,15 @@ export default function TreeModel({ position = [0, 0, 0], scale = 1 }) {
     if (!modelRef.current) return
 
     const targetRotation = {
-      left: -0.15,
-      right: 0.15,
+      left: -0.1,
+      right: 0.1,
       center: 0,
     }
 
     // Animate Y rotation using GSAP
     gsap.to(modelRef.current.rotation, {
       y: targetRotation[direction],
-      duration: 5,
+      duration: 2,
       ease: 'power2.out',
     })
 

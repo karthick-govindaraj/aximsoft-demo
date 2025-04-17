@@ -5,6 +5,7 @@ import { Suspense, useState, useEffect } from 'react'
 import { OrbitControls, Environment, Preload } from '@react-three/drei'
 import TreeModel from './TreeModel'
 import Particles from './Particles'
+import Annotations from './Annotations'
 
 export default function Scene() {
   const [isMounted, setIsMounted] = useState(false)
@@ -34,18 +35,22 @@ export default function Scene() {
       />
       
       <Suspense fallback={null}>
-        <TreeModel position={[0, -2.6, 0]} scale={1.35} />
+      <TreeModel position={[0, -2.6, 0]} scale={1.35} />
         <Particles count={2000} />
+        <Annotations />
         <Environment preset="city" />
         <Preload all />
       </Suspense>
       
       <OrbitControls 
-        enableZoom={false}
-        enablePan={false}
-        enableRotate={false}
+        enableZoom={true}
+        enablePan={true}
+        enableRotate={true}
         minDistance={3}
         maxDistance={10}
+        // Limit rotation to keep annotations readable
+        // maxPolarAngle={Math.PI * 0.65}
+        // minPolarAngle={Math.PI * 0.25}
       />
     </Canvas>
   )
