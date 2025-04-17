@@ -73,22 +73,12 @@ function Annotation({ position, content, side = "right" }) {
   distanceFactor={10}
   className="pointer-events-none"
   style={{
-    opacity,
+    fontSize: '3px',
     transition: 'opacity 0.5s ease-in-out',
-    fontSize: '14px',
-    fontFamily: 'Arial, sans-serif',
-    lineHeight: 1.4,
-    color: '#fff'
+    opacity: opacity
   }}
 >
-  <div
-    style={{
-      background: 'rgba(0, 0, 0, 0.6)',
-      padding: '6px 10px',
-      borderRadius: '6px',
-      maxWidth: '180px'
-    }}
-  >
+  <div className={`annotation-box ${getPositionClass()}`}>
     {content}
   </div>
 </Html>

@@ -32,12 +32,12 @@ canvas {
 
 .annotation-box {
   all: unset; /* Reset inherited styles */
-  font-size: 14px !important;
+  font-size: 6px !important;
   background-color: rgba(0, 0, 0, 0.6);
   color: white;
-  border: 2px solid #acacac;
-  padding: 8px 16px;
-  border-radius: 8px;
+  border: 1px solid #acacac;
+  padding: 4px 6px;
+  border-radius: 4px;
   max-width: 200px;
   white-space: nowrap;
   /* box-shadow: 0 0 10px #F3823D, 0 0 20px #F3823D, 0 0 40px #F3823D; */
