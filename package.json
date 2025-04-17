@@ -9,9 +9,14 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@react-three/drei": "^10.0.6",
+    "@react-three/fiber": "^9.1.2",
+    "gsap": "^3.12.7",
+    "next": "15.3.0",
+    "r3f-perf": "^7.2.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "next": "15.3.0"
+    "three": "^0.175.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

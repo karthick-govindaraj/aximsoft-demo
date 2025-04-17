@@ -1,0 +1,52 @@
+'use client'
+
+import { Canvas } from '@react-three/fiber'
+import { Suspense, useState, useEffect } from 'react'
+import { OrbitControls, Environment, Preload } from '@react-three/drei'
+import TreeModel from './TreeModel'
+import Particles from './Particles'
+
+export default function Scene() {
+  const [isMounted, setIsMounted] = useState(false)
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
+  if (!isMounted) return null
+
+  return (
+    <Canvas
+      shadows
+      camera={{ position: [0, 2, 5], fov: 50 }}
+      className="bg-black"
+    >
+      <color attach="background" args={['#000']} />
+      <fog attach="fog" args={['#000', 5, 20]} />
+      
+      <ambientLight intensity={0.5} />
+      <directionalLight 
+        position={[5, 5, 5]} 
+        intensity={1} 
+        castShadow 
+        shadow-mapSize-width={1024} 
+        shadow-mapSize-height={1024}
+      />
+      
+      <Suspense fallback={null}>
+        <TreeModel position={[0, -0.5, 0]} scale={1.15} />
+        <Particles count={2000} />
+        <Environment preset="city" />
+        <Preload all />
+      </Suspense>
+      
+      <OrbitControls 
+        enableZoom={true}
+        enablePan={true}
+        enableRotate={true}
+        minDistance={3}
+        maxDistance={10}
+      />
+    </Canvas>
+  )
+}
