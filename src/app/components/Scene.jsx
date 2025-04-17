@@ -6,7 +6,7 @@ import { OrbitControls, Environment, Preload } from '@react-three/drei'
 import TreeModel from './TreeModel'
 import Particles from './Particles'
 import Annotations from './Annotations'
-
+import RadialGradientBackground from './RadialGradientBackground'
 export default function Scene() {
   const [isMounted, setIsMounted] = useState(false)
 
@@ -24,7 +24,7 @@ export default function Scene() {
     >
       <color attach="background" args={['#000']} />
       <fog attach="fog" args={['#000', 5, 20]} />
-      
+      <RadialGradientBackground />
       <ambientLight intensity={0.5} />
       <directionalLight 
         position={[5, 5, 5]} 

@@ -76,7 +76,7 @@ export default function TreeModel({ position = [0, 0, 0], scale = 1 }) {
 
     // Subtle floating
     const t = performance.now() / 1000
-    modelRef.current.position.y = position[1] + Math.sin(t * 2) * 0.05
+    modelRef.current.position.y = position[1] + Math.sin(t * 0.5) * 0.05
   })
 
   return (

@@ -42,14 +42,10 @@ export default function Annotations() {
     </>
   )
 }
-
-// Individual annotation component
 function Annotation({ position, content, side = "right" }) {
   const annotationRef = useRef()
   const { camera } = useThree()
   const [opacity, setOpacity] = useState(0)
-  
-  // Determine which CSS classes to apply based on the side parameter
   const getPositionClass = () => {
     switch(side) {
       case "left": return "right-2";
@@ -81,7 +77,7 @@ function Annotation({ position, content, side = "right" }) {
     opacity: opacity
   }}
 >
-  <div className={`annotation-box ${getPositionClass()}`}>
+  <div className={`annotation-box ${getPositionClass()} text-sm sm:text-base md:text-lg`}>
     {content}
   </div>
 </Html>
