@@ -22,7 +22,7 @@ const ANNOTATIONS = [
     side: "top"
   },
   {
-    position: [1.5, 0, 1],
+    position: [2.5, 0, 0],
     content: "4Lorem ipsum dolor sit amet",
     side: "right"
   },
@@ -73,12 +73,22 @@ function Annotation({ position, content, side = "right" }) {
   distanceFactor={10}
   className="pointer-events-none"
   style={{
-    fontSize: '14px',
+    opacity,
     transition: 'opacity 0.5s ease-in-out',
-    opacity: opacity
+    fontSize: '14px',
+    fontFamily: 'Arial, sans-serif',
+    lineHeight: 1.4,
+    color: '#fff'
   }}
 >
-  <div className={`annotation-box ${getPositionClass()} text-sm sm:text-base md:text-lg`}>
+  <div
+    style={{
+      background: 'rgba(0, 0, 0, 0.6)',
+      padding: '6px 10px',
+      borderRadius: '6px',
+      maxWidth: '180px'
+    }}
+  >
     {content}
   </div>
 </Html>
