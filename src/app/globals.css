@@ -28,3 +28,18 @@ canvas {
 * {
   box-sizing: border-box;
 }
+
+
+.annotation-box {
+  all: unset; /* Reset inherited styles */
+  font-size: 14px !important;
+  background-color: rgba(0, 0, 0, 0.884);
+  color: white;
+  border: 2px solid #acacac;
+  padding: 8px 16px;
+  border-radius: 8px;
+  max-width: 200px;
+  white-space: nowrap;
+  /* box-shadow: 0 0 10px #F3823D, 0 0 20px #F3823D, 0 0 40px #F3823D; */
+  pointer-events: none;
+}

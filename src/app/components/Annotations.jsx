@@ -73,34 +73,18 @@ function Annotation({ position, content, side = "right" }) {
     <group position={position}>
 <Html
   ref={annotationRef}
-  as='div'
-  className="pointer-events-none"
+  as="div"
   distanceFactor={10}
+  className="pointer-events-none"
   style={{
     transition: 'opacity 0.5s ease-in-out',
     opacity: opacity
   }}
 >
-  <div
-    style={{
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
-      color: '#ffffff',
-      border: '2px solid #acacac',
-      borderRadius: '8px',
-      padding: '8px 16px',
-      fontSize: '14px', // lock font size
-      maxWidth: '200px',
-      whiteSpace: 'nowrap',
-    //   boxShadow: '0 0 10px #F3823D, 0 0 20px #F3823D, 0 0 40px #F3823D',
-    }}
-    className={getPositionClass()}
-  >
+  <div className={`annotation-box ${getPositionClass()}`}>
     {content}
   </div>
 </Html>
-
-
-
     </group>
   )
 }
