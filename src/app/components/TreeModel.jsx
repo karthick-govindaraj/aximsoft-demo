@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { useGLTF } from '@react-three/drei'
 import gsap from 'gsap'
@@ -9,11 +9,11 @@ export default function TreeModel({ position = [0, 0, 0], scale = 1 }) {
   const modelRef = useRef()
   const { scene } = useGLTF('/models/tree.glb')
 
-  const offsetY = position[1] - 1.8 // Lower the tree slightly
+  const [direction, setDirection] = useState('center')
 
   useEffect(() => {
     if (scene) {
-        scene.rotation.set(-Math.PI / 12, 0, 0)
+      scene.rotation.set(-Math.PI / 12, 0, 0)
       scene.traverse((child) => {
         if (child.isMesh) {
           child.castShadow = true
@@ -27,7 +27,7 @@ export default function TreeModel({ position = [0, 0, 0], scale = 1 }) {
     tl.fromTo(
       modelRef.current.position,
       { y: -5 },
-      { y: offsetY, duration: 2, ease: 'elastic.out(1, 0.5)' }
+      { y: position[1], duration: 2, ease: 'elastic.out(1, 0.5)' }
     )
 
     tl.fromTo(
@@ -44,25 +44,51 @@ export default function TreeModel({ position = [0, 0, 0], scale = 1 }) {
       '-=2.5'
     )
 
-    return () => {
-      tl.kill()
-    }
-  }, [scene, scale, offsetY])
+    return () => tl.kill()
+  }, [position, scale, scene])
 
-  useFrame((state) => {
-    const t = state.clock.getElapsedTime()
-    // modelRef.current.rotation.y = Math.sin(t / 8) * 0.3  
-    modelRef.current.position.y = offsetY + Math.sin(t / 2) * 0.05
+  // Handle mouse move
+  const handlePointerMove = (e) => {
+    const x = e.clientX
+    const width = window.innerWidth
+
+    if (x < width * 0.4) setDirection('left')
+    else if (x > width * 0.6) setDirection('right')
+    else setDirection('center')
+  }
+
+  // Apply continuous hover rotation
+  useFrame(() => {
+    if (!modelRef.current) return
+
+    const targetRotation = {
+      left: -0.15,
+      right: 0.15,
+      center: 0,
+    }
+
+    // Animate Y rotation using GSAP
+    gsap.to(modelRef.current.rotation, {
+      y: targetRotation[direction],
+      duration: 5,
+      ease: 'power2.out',
+    })
+
+    // Subtle floating
+    const t = performance.now() / 1000
+    modelRef.current.position.y = position[1] + Math.sin(t * 2) * 0.05
   })
 
   return (
-    <primitive
-      ref={modelRef}
-      object={scene}
-      position={position}
-      scale={[0, 0, 0]} // Will be animated to scale
-      dispose={null}
-    />
+    <group onPointerMove={handlePointerMove}>
+      <primitive
+        ref={modelRef}
+        object={scene}
+        position={position}
+        scale={[0, 0, 0]} // will animate to actual size
+        dispose={null}
+      />
+    </group>
   )
 }
 

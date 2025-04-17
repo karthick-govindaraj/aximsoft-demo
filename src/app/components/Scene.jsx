@@ -34,16 +34,16 @@ export default function Scene() {
       />
       
       <Suspense fallback={null}>
-        <TreeModel position={[0, -0.5, 0]} scale={1.15} />
+        <TreeModel position={[0, -2.6, 0]} scale={1.35} />
         <Particles count={2000} />
         <Environment preset="city" />
         <Preload all />
       </Suspense>
       
       <OrbitControls 
-        enableZoom={true}
-        enablePan={true}
-        enableRotate={true}
+        enableZoom={false}
+        enablePan={false}
+        enableRotate={false}
         minDistance={3}
         maxDistance={10}
       />
