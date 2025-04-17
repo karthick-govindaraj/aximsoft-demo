@@ -43,9 +43,9 @@ export default function Scene() {
       </Suspense>
       
       <OrbitControls 
-        enableZoom={true}
-        enablePan={true}
-        enableRotate={true}
+        enableZoom={false}
+        enablePan={false}
+        enableRotate={false}
         minDistance={3}
         maxDistance={10}
         // Limit rotation to keep annotations readable

@@ -84,10 +84,10 @@ function Annotation({ position, content, side = "right" }) {
   <div
     className={`px-6 py-3 rounded-lg max-w-md backdrop-blur-sm whitespace-nowrap ${getPositionClass()}`}
     style={{
-      backgroundColor: 'rgba(0, 0, 0, 0.25)',
+      backgroundColor: 'rgba(0, 0, 0, 0.15)',
       color: '#ffffff',
-      border: '2px solid #F3823D',
-      boxShadow: '0 0 10px #F3823D, 0 0 20px #F3823D, 0 0 40px #F3823D',
+      border: '2px solid #acacac',
+    //   boxShadow: '0 0 10px #F3823D, 0 0 20px #F3823D, 0 0 40px #F3823D',
     }}
   >
     {content}
