@@ -19,9 +19,7 @@ export default function TreeModel({ position = [0, 0, 0], scale = 1 }) {
           child.castShadow = true
           child.receiveShadow = true
         }
-      })
-
-      
+      })      
     }
 
     const tl = gsap.timeline()
@@ -64,8 +62,8 @@ export default function TreeModel({ position = [0, 0, 0], scale = 1 }) {
     if (!modelRef.current) return
 
     const targetRotation = {
-      left: -0.1,
-      right: 0.1,
+      left: 0.1,
+      right: -0.1,
       center: 0,
     }
     
