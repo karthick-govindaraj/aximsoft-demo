@@ -18,6 +18,18 @@ export default function TreeModel({ position = [0, 0, 0], scale = 1 }) {
         if (child.isMesh) {
           child.castShadow = true
           child.receiveShadow = true
+          const material = child.material
+
+    // Handle multi-materials
+    if (Array.isArray(material)) {
+      material.forEach((mat) => {
+        mat.transparent = true
+        mat.depthWrite = false // Optional: avoids z-buffer fighting with alpha
+      })
+    } else {
+      material.transparent = true
+      material.depthWrite = false // Optional: improves rendering of transparent parts
+    }
         }
       })      
     }
