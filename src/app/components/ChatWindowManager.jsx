@@ -5,34 +5,39 @@ import ChatWindow from './ChatWindow'
 
 export default function ChatWindowManager() {
   const [showChat, setShowChat] = useState(false)
-  
-  // Handle global click to open chat
+  const [isVisible, setIsVisible] = useState(false)
+
+  // Open chat on any window click
   useEffect(() => {
     const handleGlobalClick = () => {
       if (!showChat) {
         setShowChat(true)
+        setTimeout(() => setIsVisible(true), 20) // Delay to trigger transition
       }
     }
-    
-    // Add click event listener to entire window
+
     window.addEventListener('click', handleGlobalClick)
-    
-    // Cleanup
-    console.log(showChat)
-    return () => {
-      window.removeEventListener('click', handleGlobalClick)
-    }
+    return () => window.removeEventListener('click', handleGlobalClick)
   }, [showChat])
-  
-  // Close the chat window
+
+  // Close chat
   const handleClose = (e) => {
     e.stopPropagation()
-    setShowChat(false)
+    setIsVisible(false)
+    setTimeout(() => setShowChat(false), 300) // match with transition duration
   }
-  
+
   return (
     <>
-      {showChat && <ChatWindow onClose={handleClose} />}
+      {showChat && (
+        <div
+          className={`fixed inset-0 z-50 transition-opacity duration-500 chat-window${
+            isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
+          }`}
+        >
+          <ChatWindow onClose={handleClose} isVisible={isVisible}/>
+        </div>
+      )}
     </>
   )
 }

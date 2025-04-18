@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 
-const ChatWindow = ({onClose }) => {
+const ChatWindow = ({onClose,isVisible }) => {
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState("");
   const [loading, setLoading] = useState(false);
@@ -115,19 +115,20 @@ Aximsoft helps push the limits of what’s possible. We research, collaborate an
     <img src="/images/close-icon.svg" alt="close" className="h-8 w-auto" />
   </button>
 </div>
-    <div className="fixed inset-0 z-0 backdrop-blur-lg bg-black/30" />
-      <div
-        className="chat-bot ove-left-anim"
-        style={{
-          height: "85%",
-          width: "60%",
-          position: "relative",
-          right: "0",
-          bottom: "1020px",
-          margin: "auto",
-          height: "100vh",
-        }}
-      >
+<div className="fixed inset-0 z-0 backdrop-blur-lg bg-black/30 transition-opacity duration-300" />
+    <div
+  className={`chat-bot transition-all duration-300 transform ${
+    isVisible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-4 scale-95'
+  }`}
+  style={{
+    height: "85%",
+    width: "60%",
+    position: "relative",
+    right: "0",
+    margin: "auto",
+    height: "100vh",
+  }}
+>
         <div className="absolute w-full chatbot-wrp">
           <div className="messages overflow-y-auto">
             <div className="msg-wrp">

@@ -58,7 +58,7 @@ export default function Scene() {
       <Suspense fallback={null}>
       <TreeModel position={[0, -3, 0]} scale={1.5} />
         <Particles count={2000} />
-        <Annotations />
+        {/* <Annotations /> */}
         <Environment preset="night" />
         <Preload all />
       </Suspense>

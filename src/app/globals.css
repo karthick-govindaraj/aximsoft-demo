@@ -183,6 +183,6 @@ canvas {
 
 /* globals.css */
 .chat-window {
-  transition: all 0.3s ease;
+  transition: all 0.5s ease;
   transform-origin: bottom right;
 }
