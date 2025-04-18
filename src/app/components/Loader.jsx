@@ -43,7 +43,7 @@ export default function Loader({ progress = 0, isLoading = true }) {
       className="fixed inset-0 flex items-center justify-center bg-black z-50"
       style={{
         backgroundImage: 'radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px)',
-        backgroundSize: '50px 50px'
+        backgroundSize: '80px 80px'
       }}
     >
       <div className="relative flex flex-col items-center justify-center">
@@ -92,8 +92,14 @@ export default function Loader({ progress = 0, isLoading = true }) {
           />
           
           {/* Glowing Dot at Progress Position */}
-          <img src='/circle.svg' alt="Circle" className='h-40 w-auto' />
-
+          {/* <circle
+            cx="50"
+            cy="5"
+            r="4"
+            fill="#ffae00"
+            transform={`rotate(${(progress * 3.6)} 50 50)`}
+            filter="url(#glow)"
+          /> */}
         </svg>
         
         {/* Logo and Percentage */}

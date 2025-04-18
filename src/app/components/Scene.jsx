@@ -12,21 +12,8 @@ import ChatWindowManager from './ChatWindowManager'
 export default function Scene() {
   const [isMounted, setIsMounted] = useState(false)
   function LoadingManager() {
-    const { progress, loaded, total } = useProgress()
-    const [loadingComplete, setLoadingComplete] = useState(true)
-    
-    useEffect(() => {
-      if (loaded === total && total > 0) {
-        // Add a slight delay before hiding the loader to ensure everything is rendered
-        const timeout = setTimeout(() => {
-          setLoadingComplete(true)
-        }, 500)
-        
-        return () => clearTimeout(timeout)
-      }
-    }, [loaded, total])
-    
-    return <Loader progress={progress} isLoading={!loadingComplete} />
+    const { progress, active } = useProgress()
+  return <Loader progress={progress} isLoading={active} />
   }
 
   useEffect(() => {
