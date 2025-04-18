@@ -8,12 +8,12 @@ import Particles from './Particles'
 import Annotations from './Annotations'
 import RadialGradientBackground from './RadialGradientBackground'
 import Loader from './Loader'
+import ChatWindowManager from './ChatWindowManager'
 export default function Scene() {
   const [isMounted, setIsMounted] = useState(false)
-
   function LoadingManager() {
     const { progress, loaded, total } = useProgress()
-    const [loadingComplete, setLoadingComplete] = useState(false)
+    const [loadingComplete, setLoadingComplete] = useState(true)
     
     useEffect(() => {
       if (loaded === total && total > 0) {
@@ -69,11 +69,10 @@ export default function Scene() {
         enableRotate={false}
         minDistance={3}
         maxDistance={10}
-        // Limit rotation to keep annotations readable
-        // maxPolarAngle={Math.PI * 0.65}
-        // minPolarAngle={Math.PI * 0.25}
         />
+
     </Canvas>
+     <ChatWindowManager />
         </>
   )
 }
