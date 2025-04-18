@@ -5,14 +5,14 @@ import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 
 export default function Particles({ count = 20000 }) {
-  const mesh = useRef()
+  const whiteMesh = useRef()
+  const blackMesh = useRef()
   const dummy = useMemo(() => new THREE.Object3D(), [])
 
-  // Generate particles in a tighter and fixed range
   const particles = useMemo(() => {
     const temp = []
     for (let i = 0; i < count; i++) {
-      const radius = Math.random() * 4 + 2 // tighter: radius 2 - 6
+      const radius = Math.random() * 4 + 2
       const theta = Math.random() * Math.PI * 2
       const phi = Math.random() * Math.PI
 
@@ -36,26 +36,41 @@ export default function Particles({ count = 20000 }) {
     particles.forEach((particle, i) => {
       const { initial, scale, speed, angleOffset } = particle
       const radius = Math.sqrt(initial[0] ** 2 + initial[2] ** 2)
-
       const angle = angleOffset + time * speed
       const x = Math.sin(angle) * radius
       const z = Math.cos(angle) * radius
-      const y = initial[1] + Math.sin(time * speed * 2) * 0.1 // vertical oscillation
+      const baseY = initial[1] + Math.sin(time * speed * 2) * 0.1
 
-      dummy.position.set(x, y, z)
+      // Main white particle
+      dummy.position.set(x, baseY, z)
       dummy.scale.set(scale, scale, scale)
       dummy.updateMatrix()
+      whiteMesh.current.setMatrixAt(i, dummy.matrix)
 
-      mesh.current.setMatrixAt(i, dummy.matrix)
+      // Fake black shadow slightly lower
+      dummy.position.set(x, baseY - 0.05, z)
+      dummy.scale.set(scale, scale, scale)
+      dummy.updateMatrix()
+      blackMesh.current.setMatrixAt(i, dummy.matrix)
     })
 
-    mesh.current.instanceMatrix.needsUpdate = true
+    whiteMesh.current.instanceMatrix.needsUpdate = true
+    blackMesh.current.instanceMatrix.needsUpdate = true
   })
 
   return (
-    <instancedMesh ref={mesh} args={[null, null, count]}>
-      <sphereGeometry args={[0.03, 8, 8]} />
-      <meshBasicMaterial color="#ffffff" transparent opacity={0.7} />
-    </instancedMesh>
+    <>
+      {/* Main white particles */}
+      <instancedMesh ref={whiteMesh} args={[null, null, count]}>
+        <sphereGeometry args={[0.03, 8, 8]} />
+        <meshBasicMaterial color="#ffffff" transparent opacity={0.9} />
+      </instancedMesh>
+
+      {/* Shadow black particles */}
+      <instancedMesh ref={blackMesh} args={[null, null, count]}>
+        <sphereGeometry args={[0.03, 8, 8]} />
+        <meshBasicMaterial color="#000000" transparent opacity={0.4} />
+      </instancedMesh>
+    </>
   )
 }

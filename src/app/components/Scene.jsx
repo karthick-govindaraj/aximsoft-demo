@@ -40,7 +40,7 @@ export default function Scene() {
     <LoadingManager />
     <Canvas
       shadows
-      camera={{ position: [0, 2, 5], fov: 50 }}
+      camera={{ position: [0, 0, 5], fov: 50 }}
       className="bg-black"
     >
       <color attach="background" args={['#000']} />
@@ -59,7 +59,7 @@ export default function Scene() {
       <TreeModel position={[0, -3, 0]} scale={1.5} />
         <Particles count={2000} />
         <Annotations />
-        <Environment preset="city" />
+        <Environment preset="night" />
         <Preload all />
       </Suspense>
       
