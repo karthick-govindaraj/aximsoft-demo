@@ -63,13 +63,13 @@ export default function Particles({ count = 20000 }) {
       {/* Main white particles */}
       <instancedMesh ref={whiteMesh} args={[null, null, count]}>
         <sphereGeometry args={[0.03, 8, 8]} />
-        <meshBasicMaterial color="#ffffff" transparent opacity={0.9} />
+        <meshBasicMaterial color="#ffffff" transparent opacity={0.6} />
       </instancedMesh>
 
       {/* Shadow black particles */}
       <instancedMesh ref={blackMesh} args={[null, null, count]}>
         <sphereGeometry args={[0.03, 8, 8]} />
-        <meshBasicMaterial color="#000000" transparent opacity={0.4} />
+        <meshBasicMaterial color="#000000" transparent opacity={0.35} />
       </instancedMesh>
     </>
   )
