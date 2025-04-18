@@ -10,8 +10,8 @@ export default function RadialGradientBackground() {
 
     const ctx = canvas.getContext('2d')
     const gradient = ctx.createRadialGradient(size/2, size/2, 0, size/2, size/2, size/2)
-    gradient.addColorStop(0, 'white')
-    gradient.addColorStop(1, 'black')
+    gradient.addColorStop(0, 'black')
+    gradient.addColorStop(1, 'white') 
 
     ctx.fillStyle = gradient
     ctx.fillRect(0, 0, size, size)
@@ -23,10 +23,9 @@ export default function RadialGradientBackground() {
   }, [])
 
   return (
-    <mesh position={[0, -7, -9]}>
+    <mesh position={[0, 0, 0]}>
       <planeGeometry args={[20, 20]} />
       <meshBasicMaterial map={texture} depthTest={false} depthWrite={false} />
     </mesh>
   )
 }
-

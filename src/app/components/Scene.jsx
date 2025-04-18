@@ -2,13 +2,32 @@
 
 import { Canvas } from '@react-three/fiber'
 import { Suspense, useState, useEffect } from 'react'
-import { OrbitControls, Environment, Preload } from '@react-three/drei'
+import { OrbitControls, useProgress,Environment, Preload } from '@react-three/drei'
 import TreeModel from './TreeModel'
 import Particles from './Particles'
 import Annotations from './Annotations'
 import RadialGradientBackground from './RadialGradientBackground'
+import Loader from './Loader'
 export default function Scene() {
   const [isMounted, setIsMounted] = useState(false)
+
+  function LoadingManager() {
+    const { progress, loaded, total } = useProgress()
+    const [loadingComplete, setLoadingComplete] = useState(false)
+    
+    useEffect(() => {
+      if (loaded === total && total > 0) {
+        // Add a slight delay before hiding the loader to ensure everything is rendered
+        const timeout = setTimeout(() => {
+          setLoadingComplete(true)
+        }, 500)
+        
+        return () => clearTimeout(timeout)
+      }
+    }, [loaded, total])
+    
+    return <Loader progress={progress} isLoading={!loadingComplete} />
+  }
 
   useEffect(() => {
     setIsMounted(true)
@@ -17,6 +36,8 @@ export default function Scene() {
   if (!isMounted) return null
 
   return (
+    <>
+    <LoadingManager />
     <Canvas
       shadows
       camera={{ position: [0, 2, 5], fov: 50 }}
@@ -35,7 +56,7 @@ export default function Scene() {
       />
       
       <Suspense fallback={null}>
-      <TreeModel position={[0, -2.6, 0]} scale={1.35} />
+      <TreeModel position={[0, -3, 0]} scale={1.5} />
         <Particles count={2000} />
         <Annotations />
         <Environment preset="city" />
@@ -51,7 +72,8 @@ export default function Scene() {
         // Limit rotation to keep annotations readable
         // maxPolarAngle={Math.PI * 0.65}
         // minPolarAngle={Math.PI * 0.25}
-      />
+        />
     </Canvas>
+        </>
   )
 }

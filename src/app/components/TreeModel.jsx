@@ -20,6 +20,8 @@ export default function TreeModel({ position = [0, 0, 0], scale = 1 }) {
           child.receiveShadow = true
         }
       })
+
+      
     }
 
     const tl = gsap.timeline()
