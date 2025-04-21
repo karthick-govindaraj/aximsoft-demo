@@ -1,11 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
+import logo from "../../../public/images/axim-logo.svg";
+import Image from "next/image";
 
-const ChatWindow = ({onClose,isVisible }) => {
+const ChatWindow = ({ onClose, isVisible }) => {
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [showIntro, setShowIntro] = useState(true);
   const username = "User";
+
 
   const messagesEndRef = useRef(null);
 
@@ -18,9 +21,15 @@ Aximsoft helps push the limits of what’s possible. We research, collaborate an
   useEffect(() => {
     const savedMessages = sessionStorage.getItem("chatMessages");
     if (savedMessages) {
-      setMessages(JSON.parse(savedMessages));
+      const parsedMessages = JSON.parse(savedMessages);
+      setMessages(parsedMessages);
+
+      if (parsedMessages.some(msg => msg.sender === "user")) {
+        setShowIntro(false);
+      }
     }
   }, []);
+
 
   useEffect(() => {
     if (messages.length > 0) {
@@ -29,6 +38,7 @@ Aximsoft helps push the limits of what’s possible. We research, collaborate an
     }
   }, [messages]);
 
+  // 🔸 Typewriter effect function (not used but kept for later use)
   const typeWriterEffect = (message) => {
     let i = 0;
     const interval = setInterval(() => {
@@ -43,49 +53,67 @@ Aximsoft helps push the limits of what’s possible. We research, collaborate an
       }
     }, 10);
   };
+
   const sendMessage = async (message, sender) => {
     if (message.trim() !== "") {
-        if (showIntro) {
-            setShowIntro(false);
+      if (showIntro && sender === 'user') {
+        setShowIntro(false);
+      }
+
+      setMessages((prevMessages) => [...prevMessages, { text: message, sender }]);
+
+      if (sender === "user") {
+        setLoading(true);
+
+        const allowedQuestions = [
+          "About",
+          "About you",
+          "About aximsoft",
+          "Tell me about Aximsoft",
+          "About us",
+          "Tell me about you",
+          "Tell me about yourself"
+        ];
+
+        // Normalize function: lowercase + remove spaces
+        const normalize = str => str.toLowerCase().replace(/\s+/g, "");
+
+        // try {
+        //   const normalizedInput = normalize(message);
+        //   const match = allowedQuestions.some(q => normalize(q) === normalizedInput);
+
+        //   const reply = match
+        //     ? defaultBotReply
+        //     : "I'm here to help! Can you please be more specific or ask something else?";
+
+        //   setMessages((prevMessages) => [...prevMessages, { text: reply, sender: "bot" }]);
+        // } 
+        try {
+          const input = message.toLowerCase();
+
+          const keywords = ["about", "aximsoft", "yourself", "you", "aboutus"];
+
+          const isMatch = keywords.some((keyword) => input.includes(keyword));
+
+          const reply = isMatch
+            ? defaultBotReply
+            : "I'm here to help! Can you please be more specific or ask something else?";
+
+          setMessages((prevMessages) => [...prevMessages, { text: reply, sender: "bot" }]);
         }
-
-        setMessages((prevMessages) => [...prevMessages, { text: message, sender }]);
-
-        if (sender === 'user') {
-            setLoading(true);
-
-            const allowedQuestions = [
-                "About you?",
-                "Tell me about Aximsoft",
-                "About us?",
-                "Tell me about you?",
-                "Tell me about yourself"
-            ];
-
-            try {
-                setMessages((prevMessages) => [
-                    ...prevMessages,
-                    { text: "", sender: 'bot' }
-                ]);
-
-                const match = allowedQuestions.some(q => q.toLowerCase() === message.toLowerCase());
-
-                const reply = match
-                    ? defaultBotReply
-                    : "I'm here to help! Can you please be more specific or ask something else?";
-
-                typeWriterEffect(reply);
-            } catch (error) {
-                setMessages((prevMessages) => [
-                    ...prevMessages,
-                    { text: "Sorry, something went wrong. Please try again.", sender: 'bot' }
-                ]);
-            } finally {
-                setLoading(false);
-            }
+        catch (error) {
+          setMessages((prevMessages) => [
+            ...prevMessages,
+            { text: "Sorry, something went wrong. Please try again.", sender: "bot" }
+          ]);
+        } finally {
+          setLoading(false);
         }
+      }
     }
-};
+  };
+
+
 
   const handleButtonClick = () => {
     if (inputMessage.trim() !== "") {
@@ -104,50 +132,53 @@ Aximsoft helps push the limits of what’s possible. We research, collaborate an
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({
       behavior: "smooth",
-      block: "end",
+      block: "end"
     });
   };
 
   return (
     <>
-    <div className="absolute top-10 right-20 z-10">
-  <button onClick={onClose} aria-label="Close">
-    <img src="/images/close-icon.svg" alt="close" className="h-8 w-auto" />
-  </button>
-</div>
-<div className="fixed inset-0 z-0 backdrop-blur-lg bg-black/30 transition-opacity duration-300" />
-    <div
-  className={`chat-bot transition-all duration-300 transform ${
-    isVisible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-4 scale-95'
-  }`}
-  style={{
-    height: "85%",
-    width: "60%",
-    position: "relative",
-    right: "0",
-    margin: "auto",
-    height: "100vh",
-  }}
->
+      <div className="header w-full flex justify-between absolute top-10 z-10">
+        <div className="axim-logo">
+          <Image src={logo} alt="logo" />
+        </div>
+        <div onClick={onClose} aria-label="Close" className="c-point">
+          <img src="/images/close-icon.svg" alt="close" className="h-8 w-auto" />
+        </div>
+      </div>
+
+      <div className="fixed inset-0 z-0 backdrop-blur-lg bg-black/30 transition-opacity duration-300" />
+      <div
+        className={`chat-bot transition-all duration-300 transform ${isVisible
+          ? "opacity-100 translate-y-0 scale-100"
+          : "opacity-0 translate-y-4 scale-95"
+          }`}
+        style={{
+          height: "85%",
+          width: "60%",
+          position: "relative",
+          right: "0",
+          bottom: "70px",
+          margin: "auto",
+          height: "100vh"
+        }}
+      >
         <div className="absolute w-full chatbot-wrp">
           <div className="messages overflow-y-auto">
             <div className="msg-wrp">
-              {/* Intro message with unique class */}
               {showIntro && (
                 <div className="flex items-center gap-2 mb-3 bot-message justify-start">
                   <div className="text-msg intro-msg">How can I help you?</div>
                 </div>
               )}
 
-              {/* Render all chat messages */}
               {messages.map((msg, index) => (
                 <div
                   key={index}
-                  className={`flex items-center gap-2 mb-3 ${
-                    msg.sender === "user"
-                      ? "user-message justify-end"
-                      : "bot-message justify-start"
-                  }`}
+                  className={`flex items-center gap-2 mb-3 ${msg.sender === "user"
+                    ? "user-message justify-end"
+                    : "bot-message justify-start"
+                    }`}
                 >
                   <div className="text-msg">{msg.text}</div>
                 </div>
@@ -156,7 +187,7 @@ Aximsoft helps push the limits of what’s possible. We research, collaborate an
             <div ref={messagesEndRef} />
           </div>
 
-          <div className="chat__txt--wrp flex flex-col gap-3 justify-center items-center">
+          <div className="chat__txt--wrp flex flex-col justify-center items-center">
             <input
               type="text"
               value={inputMessage}
@@ -166,8 +197,10 @@ Aximsoft helps push the limits of what’s possible. We research, collaborate an
               onKeyDown={handleKeyPress}
               disabled={loading}
             />
+          </div>
+          <div style={{ textAlign: "center", marginTop: "40px" }}>
             <button
-              className="btn p-0"
+              className="btn p-0 c-point"
               onClick={handleButtonClick}
               disabled={loading || inputMessage.trim() === ""}
             >
