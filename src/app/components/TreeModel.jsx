@@ -320,16 +320,17 @@ export default function TreeModel({ position = [0, 0, 0], scale = 0 }) {
           sprite
           transform
           zIndexRange={[1, 0]}
+            className="annotation-box"
           style={{
-            background: "rgba(0,0,0,0.7)",
-            padding: "4px 10px",
-            borderRadius: "5px",
-            color: "white",
-            fontSize: "12px",
-            whiteSpace: "nowrap",
+            // background: "rgba(0,0,0,0.7)",
+            // padding: "4px 10px",
+            // borderRadius: "5px",
+            // color: "white",
+            // fontSize: "12px",
+            // whiteSpace: "nowrap",
             // Full opacity when hovered, blinking opacity otherwise
             opacity: hoveredMesh === textbox.name ? 1 : blinkOpacity,
-            transition: "opacity 0.2s ease", // Smooth transition when hovering
+            transition: "opacity 0.2s ease", 
           }}
         >
           {textbox.content}
