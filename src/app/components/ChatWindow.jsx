@@ -13,10 +13,8 @@ const ChatWindow = ({ onClose, isVisible }) => {
   const messagesEndRef = useRef(null);
 
   const defaultBotReply = `Aximsoft facilitates startups to build the future. Our incubation program is conceptualized to bring ideas to life and to be always with you through the startup lifecycle. We strive to build extraordinary technology products and solutions that drive some of the brightest ideas and innovations.
-
-Founded in 2005, Aximsoft is a full-scale technology firm headquartered in the USA with an offshore development center in India.
-
-Aximsoft helps push the limits of what’s possible. We research, collaborate and innovate to put the latest technologies to work for you.`;
+  Founded in 2005, Aximsoft is a full-scale technology firm headquartered in the USA with an offshore development center in India.
+  Aximsoft helps push the limits of what’s possible. We research, collaborate and innovate to put the latest technologies to work for you.`;
 
   useEffect(() => {
     const savedMessages = sessionStorage.getItem("chatMessages");
@@ -198,7 +196,7 @@ Aximsoft helps push the limits of what’s possible. We research, collaborate an
               disabled={loading}
             />
           </div>
-          <div style={{ textAlign: "center", marginTop: "40px" }}>
+          <div className="btn-wrp">
             <button
               className="btn p-0 c-point"
               onClick={handleButtonClick}
