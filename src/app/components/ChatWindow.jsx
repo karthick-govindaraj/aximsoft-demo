@@ -136,7 +136,7 @@ const ChatWindow = ({ onClose, isVisible }) => {
 
   return (
     <>
-      <div className="header w-full flex justify-between absolute top-10 z-10">
+      <div className="header w-full flex justify-between absolute z-10">
         <div className="axim-logo">
           <Image src={logo} alt="logo" />
         </div>
@@ -151,19 +151,10 @@ const ChatWindow = ({ onClose, isVisible }) => {
           ? "opacity-100 translate-y-0 scale-100"
           : "opacity-0 translate-y-4 scale-95"
           }`}
-        style={{
-          height: "85%",
-          width: "60%",
-          position: "relative",
-          right: "0",
-          bottom: "70px",
-          margin: "auto",
-          height: "100vh"
-        }}
       >
         <div className="absolute w-full chatbot-wrp">
           <div className="messages overflow-y-auto">
-            <div className="msg-wrp">
+            <div className={`msg-wrp ${showIntro ? "msg-intro-wrap" : ""}`}>
               {showIntro && (
                 <div className="flex items-center gap-2 mb-3 bot-message justify-start">
                   <div className="text-msg intro-msg">How can I help you?</div>
@@ -190,7 +181,7 @@ const ChatWindow = ({ onClose, isVisible }) => {
               type="text"
               value={inputMessage}
               placeholder="TYPE HERE"
-              className="chat-input"
+              className="chat-input text-center"
               onChange={(e) => setInputMessage(e.target.value)}
               onKeyDown={handleKeyPress}
               disabled={loading}
