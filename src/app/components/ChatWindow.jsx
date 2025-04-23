@@ -140,7 +140,7 @@ const ChatWindow = ({ onClose, isVisible }) => {
         <div className="axim-logo">
           <Image src={logo} alt="logo" />
         </div>
-        <div onClick={onClose} aria-label="Close" className="c-point">
+        <div onClick={onClose} aria-label="Close" className="c-point close-icon">
           <img src="/images/close-icon.svg" alt="close" className="h-8 w-auto" />
         </div>
       </div>
