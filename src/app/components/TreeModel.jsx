@@ -26,7 +26,7 @@ export default function TreeModel({ position = [0, 0, 0], scale = 0 }) {
 
   useEffect(() => {
     if (scene) {
-      scene.rotation.set(-Math.PI / 15, 0, 0);
+      scene.rotation.set(0, 0, 0);
       
       // Find and store references to all named meshes
       const textboxPositions = [];
@@ -58,20 +58,30 @@ export default function TreeModel({ position = [0, 0, 0], scale = 0 }) {
             
               // Apply custom right-shift for specific meshes
               if (["Mesh1", "Mesh3", "Mesh4"].includes(child.name)) {
-                offsetX -= 0.5; // Move right
+                offsetX -= 0.8; // Move right
               }
               switch(child.name) {
-                case "Mesh1":offsetX -= 0.2; 
+                case "Mesh1":offsetX -= 0.4; 
+                offsetY -= 0.15; 
+                break;
+                case "Mesh3":
+                  offsetX -= 0.2; 
+                offsetY -= 0.15; 
+                break;
+                case "Mesh4":
+                  offsetX -= 0.1;
+                offsetY -= 0.15; 
                 break;
                 case "Mesh7":offsetX -= 0.1; 
                 break;
-                case "Mesh8":offsetX += 0.3; 
-                offsetY -= 0.1; 
+                case "Mesh8":offsetX += 0.95; 
+                offsetY -= 0.4; 
                 break;
-                case "Mesh11":offsetX += 0.2; 
+                case "Mesh11":offsetX += 0.9; 
+                offsetY -= 0.5; 
                 break;
-                case "Mesh12":offsetX += 0.3; 
-                offsetY -= 0.2; 
+                case "Mesh12":offsetX += 0.9; 
+                offsetY -= 0.3; 
                 break;
               }
             
@@ -150,8 +160,8 @@ export default function TreeModel({ position = [0, 0, 0], scale = 0 }) {
     
     // Tree rotation
     const targetRotation = {
-      left: 0.1,
-      right: -0.1,
+      left: 0.3,
+      right: -0.3,
       center: 0,
     };
     
@@ -228,15 +238,15 @@ export default function TreeModel({ position = [0, 0, 0], scale = 0 }) {
           zIndexRange={[1, 0]}
             className="annotation-box"
           style={{
-            // background: "rgba(0,0,0,0.7)",
+            // background: "rgb(0, 0, 0)",
             // padding: "4px 10px",
             // borderRadius: "5px",
             // color: "white",
             // fontSize: "12px",
             // whiteSpace: "nowrap",
             // Full opacity when hovered, blinking opacity otherwise
-            opacity: hoveredMesh === textbox.name ? 1 : blinkOpacity,
-            transition: "opacity 0.2s ease", 
+            // opacity: hoveredMesh === textbox.name ? 1 : blinkOpacity,
+            // transition: "opacity 0.2s ease", 
           }}
         >
           {textbox.content}
