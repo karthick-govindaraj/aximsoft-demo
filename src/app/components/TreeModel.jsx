@@ -12,8 +12,6 @@ export default function TreeModel({ position = [0, 0, 0], scale = 0 }) {
   const meshRefs = useRef({});
   const [textboxes, setTextboxes] = useState([]);
   const [hoveredMesh, setHoveredMesh] = useState(null);
-
-  // Content for each mesh's textbox
   const textboxContent = {
     Mesh1: "Great ideas need landing gear as much as wings",
     Mesh3: "Presence is more than just being there",
@@ -27,36 +25,23 @@ export default function TreeModel({ position = [0, 0, 0], scale = 0 }) {
   useEffect(() => {
     if (scene) {
       scene.rotation.set(0, 0, 0);
-      
-      // Find and store references to all named meshes
       const textboxPositions = [];
-      
       scene.traverse((child) => {
         if (child.isMesh) {
           child.castShadow = true;
           child.receiveShadow = true;
-          
-          // Store reference to named meshes (Mesh1-Mesh13)
           if (child.name.startsWith("Mesh") && parseInt(child.name.substring(4))) {
             meshRefs.current[child.name] = child;
-            
-            // Add pointer event handlers to mesh
             if (textboxContent[child.name]) {
               child.userData = { name: child.name }; // Store name for raycasting
               
-              // Make the mesh interactive
               child.layers.enable(0);
-              
-              // Get mesh's world position
               const worldPos = new THREE.Vector3();
               child.getWorldPosition(worldPos);
-              
-              // Default offsets
+    
               let offsetX = 0.1;
               let offsetY = 0.15;
               let offsetZ = 0.1;
-            
-              // Apply custom right-shift for specific meshes
               if (["Mesh1", "Mesh3", "Mesh4"].includes(child.name)) {
                 offsetX -= 0.8; // Move right
               }
@@ -73,6 +58,7 @@ export default function TreeModel({ position = [0, 0, 0], scale = 0 }) {
                 offsetY -= 0.15; 
                 break;
                 case "Mesh7":offsetX -= 0.1; 
+                offsetY += 0.1; 
                 break;
                 case "Mesh8":offsetX += 0.95; 
                 offsetY -= 0.4; 
@@ -132,8 +118,6 @@ export default function TreeModel({ position = [0, 0, 0], scale = 0 }) {
       { x: scale, y: scale, z: scale, duration: 1.5, ease: "back.out(1.7)" },
       "-=2.5"
     );
-    
-    // Set up event listener
     window.addEventListener("mousemove", handlePointerMove);
     
     return () => {
@@ -141,8 +125,6 @@ export default function TreeModel({ position = [0, 0, 0], scale = 0 }) {
       window.removeEventListener("mousemove", handlePointerMove);
     };
   }, [position, scale, scene]);
-
-  // Handle mouse move
   const handlePointerMove = (e) => {
     const x = e.clientX;
     const width = window.innerWidth;
@@ -150,47 +132,31 @@ export default function TreeModel({ position = [0, 0, 0], scale = 0 }) {
     else if (x > width * 0.6) setDirection("right");
     else setDirection("center");
   };
-
-  // State for blinking animation
   const [blinkOpacity, setBlinkOpacity] = useState(1);
-
-  // Apply continuous hover rotation and blinking effect
   useFrame(({ raycaster, camera, clock }) => {
     if (!modelRef.current) return;
     
-    // Tree rotation
     const targetRotation = {
       left: 0.3,
       right: -0.3,
       center: 0,
     };
     
-    // Animate Y rotation using GSAP
     gsap.to(modelRef.current.rotation, {
       y: targetRotation[direction],
       duration: 2,
       ease: "power2.out",
     });
-    
-    // Subtle floating
-    const t = performance.now() / 1000;  
-    modelRef.current.position.y = position[1] + Math.sin(t * 0.5) * 0.05;
-    
-    // Calculate blinking opacity (5 second cycle)
-    const blinkTime = (clock.getElapsedTime() % 5) / 5; // 0 to 1 over 5 seconds
-    // Create a smooth pulse effect
+    // const t = performance.now() / 1000;  
+    // modelRef.current.position.y = position[1] + Math.sin(t * 0.5) * 0.05;
+    const blinkTime = (clock.getElapsedTime() % 5) / 5; 
     const newOpacity = 0.3 + (Math.sin(blinkTime * Math.PI * 2) * 0.7 + 0.7) / 2;
     setBlinkOpacity(newOpacity);
-    
-    // Raycasting for hover effect
-    // Update raycaster and check for intersections
     raycaster.setFromCamera(
       { x: (window.mouseX || 0) / window.innerWidth * 2 - 1, 
         y: -((window.mouseY || 0) / window.innerHeight) * 2 + 1 }, 
       camera
     );
-    
-    // Check for mesh intersections
     const intersects = raycaster.intersectObjects(scene.children, true);
     
     if (intersects.length > 0) {
@@ -209,8 +175,6 @@ export default function TreeModel({ position = [0, 0, 0], scale = 0 }) {
       setHoveredMesh(null);
     }
   });
-  
-  // Track mouse position for raycasting
   useEffect(() => {
     const trackMouse = (e) => {
       window.mouseX = e.clientX;
@@ -225,7 +189,6 @@ export default function TreeModel({ position = [0, 0, 0], scale = 0 }) {
     <group ref={modelRef} position={position}>
       <primitive object={scene}/>
       
-      {/* Render textboxes with blinking or hover effect */}
       {textboxes.map((textbox) => (
         <Html
           key={textbox.name}
