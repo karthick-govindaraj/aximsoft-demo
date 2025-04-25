@@ -1,7 +1,7 @@
 "use client";
 import { useRef, useEffect, useState } from "react";
 import { useFrame } from "@react-three/fiber";
-import * as THREE from 'three';
+import * as THREE from "three";
 import { useGLTF, Html } from "@react-three/drei";
 import gsap from "gsap";
 
@@ -12,6 +12,8 @@ export default function TreeModel({ position = [0, 0, 0], scale = 0 }) {
   const meshRefs = useRef({});
   const [textboxes, setTextboxes] = useState([]);
   const [hoveredMesh, setHoveredMesh] = useState(null);
+  const [blinkOpacity, setBlinkOpacity] = useState(1);
+
   const textboxContent = {
     Mesh1: "Great ideas need landing gear as much as wings",
     Mesh3: "Presence is more than just being there",
@@ -26,51 +28,33 @@ export default function TreeModel({ position = [0, 0, 0], scale = 0 }) {
     if (scene) {
       scene.rotation.set(0, 0, 0);
       const textboxPositions = [];
+
       scene.traverse((child) => {
         if (child.isMesh) {
           child.castShadow = true;
           child.receiveShadow = true;
+
           if (child.name.startsWith("Mesh") && parseInt(child.name.substring(4))) {
             meshRefs.current[child.name] = child;
+
             if (textboxContent[child.name]) {
-              child.userData = { name: child.name }; // Store name for raycasting
-              
+              child.userData = { name: child.name };
               child.layers.enable(0);
-              const worldPos = new THREE.Vector3();
-              child.getWorldPosition(worldPos);
-    
+
               let offsetX = 0.1;
               let offsetY = 0.15;
               let offsetZ = 0.1;
-              if (["Mesh1", "Mesh3", "Mesh4"].includes(child.name)) {
-                offsetX -= 0.8; // Move right
+
+              switch (child.name) {
+                case "Mesh1": offsetX -= 1.2; offsetY -= 0.15; break;
+                case "Mesh3": offsetX -= 1.0; offsetY -= 0.15; break;
+                case "Mesh4": offsetX -= 0.9; offsetY -= 0.15; break;
+                case "Mesh7": offsetX -= 0.1; offsetY += 0.1; break;
+                case "Mesh8": offsetX += 0.95; offsetY -= 0.4; break;
+                case "Mesh11": offsetX += 0.9; offsetY -= 0.5; break;
+                case "Mesh12": offsetX += 0.9; offsetY -= 0.3; break;
               }
-              switch(child.name) {
-                case "Mesh1":offsetX -= 0.4; 
-                offsetY -= 0.15; 
-                break;
-                case "Mesh3":
-                  offsetX -= 0.2; 
-                offsetY -= 0.15; 
-                break;
-                case "Mesh4":
-                  offsetX -= 0.1;
-                offsetY -= 0.15; 
-                break;
-                case "Mesh7":offsetX -= 0.1; 
-                offsetY += 0.1; 
-                break;
-                case "Mesh8":offsetX += 0.95; 
-                offsetY -= 0.4; 
-                break;
-                case "Mesh11":offsetX += 0.9; 
-                offsetY -= 0.5; 
-                break;
-                case "Mesh12":offsetX += 0.9; 
-                offsetY -= 0.3; 
-                break;
-              }
-            
+
               textboxPositions.push({
                 name: child.name,
                 position: [
@@ -82,9 +66,8 @@ export default function TreeModel({ position = [0, 0, 0], scale = 0 }) {
               });
             }
           }
-          
+
           const material = child.material;
-          // Handle multi-materials
           if (Array.isArray(material)) {
             material.forEach((mat) => {
               mat.transparent = true;
@@ -96,10 +79,10 @@ export default function TreeModel({ position = [0, 0, 0], scale = 0 }) {
           }
         }
       });
-      
+
       setTextboxes(textboxPositions);
     }
-    
+
     const tl = gsap.timeline();
     tl.fromTo(
       modelRef.current.position,
@@ -118,13 +101,14 @@ export default function TreeModel({ position = [0, 0, 0], scale = 0 }) {
       { x: scale, y: scale, z: scale, duration: 1.5, ease: "back.out(1.7)" },
       "-=2.5"
     );
+
     window.addEventListener("mousemove", handlePointerMove);
-    
     return () => {
       tl.kill();
       window.removeEventListener("mousemove", handlePointerMove);
     };
   }, [position, scale, scene]);
+
   const handlePointerMove = (e) => {
     const x = e.clientX;
     const width = window.innerWidth;
@@ -132,63 +116,60 @@ export default function TreeModel({ position = [0, 0, 0], scale = 0 }) {
     else if (x > width * 0.6) setDirection("right");
     else setDirection("center");
   };
-  const [blinkOpacity, setBlinkOpacity] = useState(1);
-  useFrame(({ raycaster, camera, clock }) => {
-    if (!modelRef.current) return;
-    
-    const targetRotation = {
-      left: 0.3,
-      right: -0.3,
-      center: 0,
-    };
-    
-    gsap.to(modelRef.current.rotation, {
-      y: targetRotation[direction],
-      duration: 2,
-      ease: "power2.out",
-    });
-    // const t = performance.now() / 1000;  
-    // modelRef.current.position.y = position[1] + Math.sin(t * 0.5) * 0.05;
-    const blinkTime = (clock.getElapsedTime() % 5) / 5; 
-    const newOpacity = 0.3 + (Math.sin(blinkTime * Math.PI * 2) * 0.7 + 0.7) / 2;
-    setBlinkOpacity(newOpacity);
-    raycaster.setFromCamera(
-      { x: (window.mouseX || 0) / window.innerWidth * 2 - 1, 
-        y: -((window.mouseY || 0) / window.innerHeight) * 2 + 1 }, 
-      camera
-    );
-    const intersects = raycaster.intersectObjects(scene.children, true);
-    
-    if (intersects.length > 0) {
-      const firstMesh = intersects.find(i => 
-        i.object.userData && 
-        i.object.userData.name && 
-        i.object.userData.name.startsWith('Mesh')
-      );
-      
-      if (firstMesh) {
-        setHoveredMesh(firstMesh.object.userData.name);
-      } else {
-        setHoveredMesh(null);
-      }
-    } else {
-      setHoveredMesh(null);
-    }
-  });
+
   useEffect(() => {
     const trackMouse = (e) => {
       window.mouseX = e.clientX;
       window.mouseY = e.clientY;
     };
-    
-    window.addEventListener('mousemove', trackMouse);
-    return () => window.removeEventListener('mousemove', trackMouse);
+    window.addEventListener("mousemove", trackMouse);
+    return () => window.removeEventListener("mousemove", trackMouse);
   }, []);
+
+  useFrame(({ raycaster, camera, clock }) => {
+    if (!modelRef.current) return;
+
+    const targetRotation = {
+      left: 0.3,
+      right: -0.3,
+      center: 0,
+    };
+
+    gsap.to(modelRef.current.rotation, {
+      y: targetRotation[direction],
+      duration: 2,
+      ease: "power2.out",
+    });
+
+    const blinkTime = (clock.getElapsedTime() % 5) / 5;
+    const newOpacity = 0.3 + (Math.sin(blinkTime * Math.PI * 2) * 0.7 + 0.7) / 2;
+    setBlinkOpacity(newOpacity);
+
+    raycaster.setFromCamera(
+      {
+        x: (window.mouseX || 0) / window.innerWidth * 2 - 1,
+        y: -((window.mouseY || 0) / window.innerHeight) * 2 + 1,
+      },
+      camera
+    );
+
+    const intersects = raycaster.intersectObjects(scene.children, true);
+    const firstMesh = intersects.find(
+      (i) =>
+        i.object.userData &&
+        i.object.userData.name &&
+        i.object.userData.name.startsWith("Mesh")
+    );
+    if (firstMesh) {
+      setHoveredMesh(firstMesh.object.userData.name);
+    } else {
+      setHoveredMesh(null);
+    }
+  });
 
   return (
     <group ref={modelRef} position={position}>
-      <primitive object={scene}/>
-      
+      <primitive object={scene} />
       {textboxes.map((textbox) => (
         <Html
           key={textbox.name}
@@ -199,20 +180,18 @@ export default function TreeModel({ position = [0, 0, 0], scale = 0 }) {
           sprite
           transform
           zIndexRange={[1, 0]}
-            className="annotation-box"
+          className="annotation-box"
           style={{
-            // background: "rgb(0, 0, 0)",
-            // padding: "4px 10px",
-            // borderRadius: "5px",
-            // color: "white",
-            // fontSize: "12px",
-            // whiteSpace: "nowrap",
-            // Full opacity when hovered, blinking opacity otherwise
+            transform: `rotateY(${direction === "left" ? 100 : direction === "right" ? 100 : 0}deg)`
+,
+            // fontSize: `${
+            //   direction === "left" ? 5 : direction === "right" ? 5 : 14
+            // }px`
             // opacity: hoveredMesh === textbox.name ? 1 : blinkOpacity,
-            // transition: "opacity 0.2s ease", 
+            // transition: "opacity 0.2s ease, transform 0.5s ease",
           }}
         >
-          {textbox.content}
+          {textbox.content} - {direction}
         </Html>
       ))}
     </group>

@@ -55,7 +55,7 @@ export default function Scene() {
             />
       <color attach="background" args={['#000']} />
       <fog attach="fog" args={['#000', 5, 20]} />
-      <RadialGradientBackground />
+      {/* <RadialGradientBackground /> */}
       <ambientLight intensity={0.6} />
       <directionalLight 
         position={[5, 5, 5]} 
