@@ -236,9 +236,9 @@ export default function TreeModel({ position = [0, 0, 0], scale = 0 }) {
               display: 'flex',
               transform:
                 direction === "left"
-                  ? "skew(5deg, -5deg)"
+                  ? "skew(2deg, -2deg)"
                   : direction === "right"
-                    ? "skew(5deg, 5deg)"
+                    ? "skew(2deg, 2deg)"
                     : "none",
               transition: "transform 0.5s ease",
             }}
@@ -247,9 +247,9 @@ export default function TreeModel({ position = [0, 0, 0], scale = 0 }) {
               style={{
                 transform:
                   direction === "left"
-                    ? "skew(5deg, -1deg)"
+                    ? "skew(2deg, -0.5deg)"
                     : direction === "right"
-                      ? "skew(5deg, 1deg)"
+                      ? "skew(2deg, 0.5deg)"
                       : "none",
                 transition: "transform 0.5s ease",
               }}
