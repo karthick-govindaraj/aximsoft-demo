@@ -170,7 +170,7 @@ export default function TreeModel({ position = [0, 0, 0], scale = 0 }) {
   return (
     <group ref={modelRef} position={position}>
       <primitive object={scene} />
-      {textboxes.map((textbox) => (
+      {/* {textboxes.map((textbox) => (
         <Html
           key={textbox.name}
           position={textbox.position}
@@ -181,19 +181,85 @@ export default function TreeModel({ position = [0, 0, 0], scale = 0 }) {
           transform
           zIndexRange={[1, 0]}
           className="annotation-box"
-          style={{
-            transform: `rotateY(${direction === "left" ? 100 : direction === "right" ? 100 : 0}deg)`
-,
-            // fontSize: `${
-            //   direction === "left" ? 5 : direction === "right" ? 5 : 14
-            // }px`
-            // opacity: hoveredMesh === textbox.name ? 1 : blinkOpacity,
-            // transition: "opacity 0.2s ease, transform 0.5s ease",
-          }}
+          // style={{
+          //   transform: `skew(${direction === "left" ? (0, 10) : direction === "right" ? (0, -10) : 0}deg)`
+          //   ,
+          //   // fontSize: `${direction === "left" ? 5 : direction === "right" ? 5 : 14
+          //   //   }px`
+          //   // opacity: hoveredMesh === textbox.name ? 1 : blinkOpacity,
+          //   // transition: "opacity 0.2s ease, transform 0.5s ease",
+          // }}
         >
           {textbox.content} - {direction}
         </Html>
-      ))}
+      ))} */}
+      {textboxes.map((textbox) => {
+        const offset = direction === "left" ? -0.25 : direction === "right" ? 0.25 : 0;
+
+        return (
+          // <Html
+          //   key={textbox.name}
+          //   position={textbox.position}
+          //   center
+          //   distanceFactor={2}
+          //   occlude={false}
+          //   sprite
+          //   transform
+          //   zIndexRange={[1, 0]}
+          //   className="annotation-box"
+          // >
+          //   <div
+          //     style={{
+          //       transform:
+          //         direction === "left"
+          //           ? "skew(10deg, -10deg)"
+          //           : direction === "right"
+          //             ? "skew(10deg, 10deg)"
+          //             : "none",
+          //     }}
+          //   >
+          //     {textbox.content}
+          //   </div>
+          // </Html>
+
+          <Html
+            key={textbox.name}
+            position={textbox.position}
+            center
+            distanceFactor={2}
+            occlude={false}
+            sprite
+            transform
+            zIndexRange={[1, 0]}
+            className="annotation-box"
+            style={{
+              display: 'flex',
+              transform:
+                direction === "left"
+                  ? "skew(5deg, -5deg)"
+                  : direction === "right"
+                    ? "skew(5deg, 5deg)"
+                    : "none",
+              transition: "transform 0.5s ease",
+            }}
+          >
+            <div
+              style={{
+                transform:
+                  direction === "left"
+                    ? "skew(5deg, -1deg)"
+                    : direction === "right"
+                      ? "skew(5deg, 1deg)"
+                      : "none",
+                transition: "transform 0.5s ease",
+              }}
+            >
+              <span>{textbox.content}</span>
+            </div>
+          </Html>
+
+        );
+      })}
     </group>
   );
 }
